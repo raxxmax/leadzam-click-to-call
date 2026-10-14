@@ -1,2 +1,18 @@
+# ===== Secrets & credentials (NEVER commit these) =====
+.env
+serviceAccountKey*.json
+*-firebase-adminsdk-*.json
+google-services.json
+app/google-services.json
+
+# ===== Android build artefacts =====
+.gradle/
+build/
 local.properties
+
+# ===== IDE files =====
 .idea/
+*.iml
+
+# ===== Node.js =====
+node_modules/
