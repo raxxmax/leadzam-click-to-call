@@ -2,7 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        POST_NOTIFICATIONS: required on API 33+ to show notifications.
+        We request this at runtime in MainActivity (rememberLauncherForActivityResult).
+        Declaring it here is mandatory — the runtime prompt won't show without it.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+        NO android.permission.CALL_PHONE — we use ACTION_DIAL (opens dialer for user
+        to confirm) never ACTION_CALL (which would auto-dial, requiring this permission).
+    -->
+
     <application
+        android:name=".LeadzamApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,18 +24,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Leadzam">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.Leadzam"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+            DialMessagingService handles FCM data messages.
+            exported=false: only the Firebase SDK (same process / trusted caller) can start it.
+        -->
+        <service
+            android:name=".DialMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
